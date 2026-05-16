@@ -12,9 +12,27 @@ HEADERS = {
 
 BASE_URL = 'https://api.chaster.app'
 
-def get_lock_status(lock_id):
-    response = requests.get(f'{BASE_URL}/api/extensions/sessions/{lock_id}', headers=HEADERS)
+LOCK_ID = '6a08b0e5fef2827dcda0a97b'  # Your current self-lock
+
+
+def get_lock_status():
+    # Try lock endpoint first
+    response = requests.get(f'{BASE_URL}/api/locks/{LOCK_ID}', headers=HEADERS)
+    if response.ok:
+        return response.json()
+    # Fallback to session if needed
+    response = requests.get(f'{BASE_URL}/api/extensions/sessions/{LOCK_ID}', headers=HEADERS)
     return response.json()
 
-# Add more functions as needed
-print('Chaster API wrapper loaded with token.')
+def add_time(seconds: int):
+    payload = {
+        "name": "add_time",
+        "params": seconds
+    }
+    response = requests.post(f'{BASE_URL}/api/extensions/sessions/{LOCK_ID}/action', json=payload, headers=HEADERS)
+    return response.json()
+
+# Test
+if __name__ == "__main__":
+    print(get_lock_status())
+print('Chaster API ready for Ma\'am control.')
