@@ -1,1 +1,6 @@
 cd chaster-maam-control
+cd chaster-maam-control
+git pull origin main
+pip install requests python-dotenv
+cp .env.example .env
+python chaster_api.py
